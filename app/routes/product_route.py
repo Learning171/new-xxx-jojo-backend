@@ -10,6 +10,7 @@ from app.services.product_services import (
     save_image,
     validate_image_extension,
     update_image_record,
+    get_product_by_id
 )
 from fastapi import UploadFile, File
 from app.validations.product_validations import ProductCreate, ProductCategory
@@ -30,6 +31,14 @@ def create_new_product(product_create: ProductCreate, db: db_dependency, user: s
 def read_all_products(db: db_dependency, user: shop_owner_required):
     products = get_all_products(db)
     return products
+
+@product_router.get("/products/{id}")
+def get_product_details(id: int, db: db_dependency, user: shop_owner_required):
+    product = get_product_by_id(db, id)
+    if product is None:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return product
+
 
 
 @product_router.get("/products/category/{category}")

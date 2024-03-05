@@ -18,6 +18,13 @@ def get_all_products(db: db_dependency, skip: int = 0, limit: int = 10):
         .all()
     )
 
+def get_product_by_id(db: db_dependency, id: int):
+    return (
+        db.query(Product)
+        .options(joinedload(Product.images))
+        .filter(Product.id == id)
+        .first()
+    )
 
 def get_products_by_category(
     db: db_dependency, category: ProductCategory, skip: int = 0, limit: int = 10
